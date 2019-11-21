@@ -4,44 +4,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
     <ImageView
-        android:layout_width="wrap_content"
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_weight="1"
-        android:id="@+id/imageView" />
-
+        android:layout_marginBottom="0dp"/>
     <LinearLayout
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal" >
-
+        android:gravity="center_horizontal"
+        android:layout_marginTop="0dp">
         <Button
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:text="進む"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:id="@+id/start_button"/>
-
+            android:id="@+id/go_button"/>
         <Button
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:text="戻る"
             android:layout_centerInParent="true"
-            android:id="@+id/pause_button"/>
-
+            android:id="@+id/back_button"/>
         <Button
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:text="再生/停止"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:id="@+id/reset_button"/>
+            android:id="@+id/playpause_button"/>
     </LinearLayout>
-
-
 </LinearLayout>

@@ -5,14 +5,15 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
+//import android.util.Log
+import android.view.View //追加
 import android.provider.MediaStore
 import android.content.ContentUris
 import kotlinx.android.synthetic.main.activity_main.*
 
 private val PERMISSIONS_REQUEST_CODE = 100 //←これ必要なの？　8.3
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity, View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +33,10 @@ class MainActivity : AppCompatActivity() {
         } else {
             getContentsInfo()
         }
+
+        go_button.setOnClickListener(this)
+        back_button.setOnClickListener(this)
+        pause_button.setOnClickListener(this)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -66,4 +71,13 @@ class MainActivity : AppCompatActivity() {
         }
         cursor.close()
     }
+
+    override fun onClick(v: View) {
+        if (v.id == R.id.go_button) {
+            // ここに表示view追加
+        } else if (v.id == R.id.back_button) {
+            // ここに表示view追加
+        }
+    }
+
 }
