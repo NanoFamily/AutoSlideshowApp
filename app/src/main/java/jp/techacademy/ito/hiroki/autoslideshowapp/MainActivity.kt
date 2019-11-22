@@ -71,8 +71,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         if (cursor!!.moveToFirst()) {
             /*do {*/
             // indexからIDを取得し、そのIDから画像のURIを取得する
-            val fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID)
-            val id = cursor.getLong(fieldIndex)
+            val fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
+            val id = cursor!!.getLong(fieldIndex)
             val imageUri =
                 ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
             imageView.setImageURI(imageUri)
@@ -83,6 +83,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View) {
         if (v.id == R.id.go_button) {
             cursor!!.moveToNext()
+            val fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
+            val id = cursor!!.getLong(fieldIndex)
+            val imageUri =
+                ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+            imageView.setImageURI(imageUri)
+        }
+        if (v.id == R.id.back_button) {
+            cursor!!.moveToPrevious()
+            val fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
+            val id = cursor!!.getLong(fieldIndex)
+            val imageUri =
+                ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+            imageView.setImageURI(imageUri)
         }
     }
 
