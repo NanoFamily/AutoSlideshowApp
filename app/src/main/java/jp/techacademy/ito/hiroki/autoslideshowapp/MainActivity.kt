@@ -10,6 +10,9 @@ import android.os.Build
 import android.view.View
 import android.provider.MediaStore
 import android.content.ContentUris
+import android.os.Handler
+import java.util.Timer
+import java.util.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 private val PERMISSIONS_REQUEST_CODE = 100 //←これ必要なの？　8.3
@@ -17,6 +20,8 @@ private val PERMISSIONS_REQUEST_CODE = 100 //←これ必要なの？　8.3
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     var cursor: Cursor? = null //メンバ変数(ﾟдﾟ)！
+    private var mTimer: Timer? = null
+    private var mHandler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +47,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         back_button.setOnClickListener(this)
         playpause_button.setOnClickListener(this)
     }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
@@ -54,6 +60,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 }
         }
     }
+
     public fun getContentsInfo() {
         // 画像の情報を取得する
         val resolver = contentResolver
@@ -66,45 +73,67 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         )
         cursor!!.moveToFirst()
         baseimage()
+        /*if (cursor!!.moveToFirst()) {
+            cursor = null
+        }*/
     }
 
-        //cursor!!.moveToFirst()
-        /*do {*/
-        // indexからIDを取得し、そのIDから画像のURIを取得する
-        fun baseimage() {
-            val fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
-            val id = cursor!!.getLong(fieldIndex)
-            val imageUri =
-                ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
-            imageView.setImageURI(imageUri)
-        } //while (cursor.moveToNext())
-        //cursor!!.close()
+    //cursor!!.moveToFirst()
+    /*do {*/
+    // indexからIDを取得し、そのIDから画像のURIを取得する
+    fun baseimage() {
+        val fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
+        val id = cursor!!.getLong(fieldIndex)
+        val imageUri =
+            ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+        imageView.setImageURI(imageUri)
+    } //while (cursor.moveToNext())
+    //cursor!!.close()
 
     override fun onClick(v: View) {
         if (v.id == R.id.go_button) {
-            cursor!!.moveToNext()
-            baseimage()
+            if (cursor!!.moveToNext() == true) {
+                baseimage()
+            } else {
+                cursor!!.moveToFirst()
+                baseimage()
+            }
         }
-
-
 
         if (v.id == R.id.back_button) {
-            cursor!!.moveToPrevious()
-            baseimage()
+            if (cursor!!.moveToPrevious() == true) {
+                baseimage()
+            } else {
+                cursor!!.moveToLast()
+                baseimage()
+            }
         }
 
+        if (v.id == R.id.playpause_button) {
+            if (mTimer == null) {
+                mTimer = Timer()
+                mTimer!!.schedule(object : TimerTask() {
+                    override fun run() {
+                        mHandler.post {
+                            if (cursor!!.moveToNext() == true) {
+                                baseimage()
+                            } else {
+                                cursor!!.moveToFirst()
+                                baseimage()
+                            }
+                        }
+                    }
+                }, 2000, 2000) // 最初に始動させるまで 2秒、ループの間隔を 2秒 に設定
+            } else {
+                mTimer!!.cancel()
+                mTimer = null
+            }
+        }
     }
+    //
 
-    if (cursor!!.moveToNext() == false) {
-        cursor!!.moveToFirst()
+    override fun onDestroy() {
+        cursor!!.close()
     }
-
-    if (cursor!!.moveToPrevious() == false) {
-        cursor!!.moveToLast()
-
-    }
-
-    /*override fun onDestroy(v: View){
-        cursor!!/close()
-    }*/
 }
+
