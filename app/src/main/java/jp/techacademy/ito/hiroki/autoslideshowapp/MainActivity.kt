@@ -111,6 +111,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         if (v.id == R.id.playpause_button) {
             if (mTimer == null) {
                 mTimer = Timer()
+                go_button.isEnabled = false
+                back_button.isEnabled = false
                 mTimer!!.schedule(object : TimerTask() {
                     override fun run() {
                         mHandler.post {
@@ -126,6 +128,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             } else {
                 mTimer!!.cancel()
                 mTimer = null
+                go_button.isEnabled = false
+                back_button.isEnabled = false
             }
         }
     }
