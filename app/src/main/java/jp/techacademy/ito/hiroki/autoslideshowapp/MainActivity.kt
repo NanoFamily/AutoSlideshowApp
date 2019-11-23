@@ -16,12 +16,11 @@ private val PERMISSIONS_REQUEST_CODE = 100 //←これ必要なの？　8.3
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
-        var cursor: Cursor? = null //メンバ変数(ﾟдﾟ)！
+    var cursor: Cursor? = null //メンバ変数(ﾟдﾟ)！
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         // Android 6.0以降の場合
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // パーミッションの許可状態を確認する
@@ -39,12 +38,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         } else {
             getContentsInfo()
         }
-
         go_button.setOnClickListener(this)
         back_button.setOnClickListener(this)
         playpause_button.setOnClickListener(this)
     }
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
@@ -57,7 +54,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 }
         }
     }
-
     public fun getContentsInfo() {
         // 画像の情報を取得する
         val resolver = contentResolver
@@ -68,9 +64,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             null, // フィルタ用パラメータ
             null // ソート (null ソートなし)
         )
-        if (cursor!!.moveToFirst()) {
-            /*do {*/
-            // indexからIDを取得し、そのIDから画像のURIを取得する
+        cursor!!.moveToFirst()
+        baseimage()
+    }
+
+        //cursor!!.moveToFirst()
+        /*do {*/
+        // indexからIDを取得し、そのIDから画像のURIを取得する
+        fun baseimage() {
             val fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
             val id = cursor!!.getLong(fieldIndex)
             val imageUri =
@@ -78,25 +79,32 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             imageView.setImageURI(imageUri)
         } //while (cursor.moveToNext())
         //cursor!!.close()
-    }
 
     override fun onClick(v: View) {
         if (v.id == R.id.go_button) {
             cursor!!.moveToNext()
-            val fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
-            val id = cursor!!.getLong(fieldIndex)
-            val imageUri =
-                ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
-            imageView.setImageURI(imageUri)
+            baseimage()
         }
+
+
+
         if (v.id == R.id.back_button) {
             cursor!!.moveToPrevious()
-            val fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
-            val id = cursor!!.getLong(fieldIndex)
-            val imageUri =
-                ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
-            imageView.setImageURI(imageUri)
+            baseimage()
         }
+
     }
 
+    if (cursor!!.moveToNext() == false) {
+        cursor!!.moveToFirst()
+    }
+
+    if (cursor!!.moveToPrevious() == false) {
+        cursor!!.moveToLast()
+
+    }
+
+    /*override fun onDestroy(v: View){
+        cursor!!/close()
+    }*/
 }
