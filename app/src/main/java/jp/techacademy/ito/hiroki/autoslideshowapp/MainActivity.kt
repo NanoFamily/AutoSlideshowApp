@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.content.pm.PackageManager
 import android.os.Build
-//import android.util.Log
 import android.view.View
 import android.provider.MediaStore
 import android.content.ContentUris
