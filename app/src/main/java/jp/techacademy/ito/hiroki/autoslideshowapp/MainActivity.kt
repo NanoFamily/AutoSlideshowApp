@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         // Android 6.0以降の場合
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // パーミッションの許可状態を確認する
@@ -37,6 +38,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
                     PERMISSIONS_REQUEST_CODE
                 )
+
             }
             // Android 5系以下の場合
         } else {
@@ -113,6 +115,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 mTimer = Timer()
                 go_button.isEnabled = false
                 back_button.isEnabled = false
+                playpause_button.text = "停止"
                 mTimer!!.schedule(object : TimerTask() {
                     override fun run() {
                         mHandler.post {
@@ -128,8 +131,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             } else {
                 mTimer!!.cancel()
                 mTimer = null
-                go_button.isEnabled = false
-                back_button.isEnabled = false
+                playpause_button.text = "再生"
+                go_button.isEnabled = true
+                back_button.isEnabled = true
             }
         }
     }
