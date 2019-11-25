@@ -92,6 +92,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     //cursor!!.close()
 
     override fun onClick(v: View) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                processButton(v)
+            } else {
+                requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), PERMISSIONS_REQUEST_CODE)
+            }
+        }
+    }
+    fun processButton(v: View) {
         if (v.id == R.id.go_button) {
             if (cursor!!.moveToNext() == true) {
                 baseimage()
@@ -100,7 +109,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 baseimage()
             }
         }
-
         if (v.id == R.id.back_button) {
             if (cursor!!.moveToPrevious() == true) {
                 baseimage()
@@ -109,13 +117,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 baseimage()
             }
         }
-
         if (v.id == R.id.playpause_button) {
             if (mTimer == null) {
                 mTimer = Timer()
                 go_button.isEnabled = false
                 back_button.isEnabled = false
-                playpause_button.text = "停止"
                 mTimer!!.schedule(object : TimerTask() {
                     override fun run() {
                         mHandler.post {
@@ -131,13 +137,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             } else {
                 mTimer!!.cancel()
                 mTimer = null
-                playpause_button.text = "再生"
-                go_button.isEnabled = true
-                back_button.isEnabled = true
+                go_button.isEnabled = false
+                back_button.isEnabled = false
             }
         }
     }
-    //
 
     override fun onDestroy() {
         cursor!!.close()
